@@ -5,210 +5,213 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interview Preparation Coach</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#000087">
+    <meta name="theme-color" content="#1a2b4c">
     <link rel="apple-touch-icon" href="icon-512.png">
 
     <style>
-        /* --- STRICT 3-COLOR PALETTE --- */
+        /* --- COLOR PALETTE BASED ON IMAGE --- */
         :root {
-            --dark: #000087;      /* Dark Blue */
-            --sky: #2CAAFF;       /* Sky Blue */
-            --beige: #E4E4DB;     /* Light Gray Beige */
+            --dark-blue: #1a2b4c;      /* Main text and dark buttons */
+            --sky-blue: #2CA8FF;       /* Listen button */
+            --orange: #f26b38;         /* Record button */
+            --green: #4caf50;          /* Print button */
+            --bg-glass: rgba(255, 255, 255, 0.65); /* Glassmorphism background */
+            --inner-bg: #f8f9fa;       /* Inner card background */
             --white: #ffffff;
+            --border-color: #cbd5e1;
         }
 
         body { 
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            margin: 0; padding: 20px; 
-            color: var(--dark);
+            margin: 0; 
+            padding: 20px; 
+            color: var(--dark-blue);
             min-height: 100vh;
-            /* Replace with your image */
+            /* Update 'background.jpg' to your specific office image */
             background: url('background.jpg') no-repeat center center fixed; 
             background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
         }
 
+        /* THE GLASS CONTAINER */
         .container { 
-            max-width: 650px; margin: 20px auto; 
-            background: rgba(255, 255, 255, 0.96); 
-            padding: 30px; border-radius: 15px; 
-            box-shadow: 0 10px 30px rgba(0, 0, 50, 0.4); 
-            border-top: 8px solid var(--sky); 
-            backdrop-filter: blur(5px); 
-            position: relative;
+            width: 100%;
+            max-width: 800px; 
+            margin: 10px auto; 
+            background: var(--bg-glass); 
+            padding: 30px; 
+            border-radius: 20px; 
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); 
+            backdrop-filter: blur(12px); /* Strong blur for glass effect */
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
-        .logo-container { text-align: center; margin-bottom: 10px; }
-        .logo-img { max-width: 150px; height: auto; }
-        h2 { text-align: center; color: var(--dark); margin: 0 0 15px 0; letter-spacing: 1px; }
+        /* LOGO & TITLE */
+        .header-section { text-align: center; margin-bottom: 20px; }
+        .logo-img { max-width: 200px; height: auto; margin-bottom: 10px;}
+        h2 { color: var(--dark-blue); margin: 0; font-size: 1.8rem; letter-spacing: 0.5px; }
 
-        /* --- CATEGORY TABS --- */
+        /* TABS (PILL DESIGN) */
         .tabs-container {
             display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-            background: #f0f0f0;
-            padding: 5px;
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 30px;
+            margin: 20px auto;
+            max-width: 500px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
         .tab-btn {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            background: transparent;
-            color: #666;
-            font-weight: bold;
-            font-size: 0.95rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
+            flex: 1; padding: 12px; border: none; background: transparent;
+            color: #555; font-weight: bold; font-size: 1rem;
+            cursor: pointer; transition: all 0.3s;
         }
         .tab-btn.active {
-            background: var(--white);
-            color: var(--dark);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: var(--dark-blue);
+            color: var(--white);
+            border-radius: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
 
-        /* NAV CONTROLS */
-        .nav-controls { 
-            display: flex; justify-content: space-between; 
-            margin-bottom: 20px; 
-            border-bottom: 1px solid #eee; padding-bottom: 15px;
-            gap: 10px;
+        /* TOP NAVIGATION (PREV/PRINT/NEXT) */
+        .top-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
-        .btn-nav { 
-            background-color: var(--dark); 
-            color: white; 
-            border: none; 
-            font-weight: bold; 
-            padding: 6px 15px; 
-            font-size: 0.9rem;
-            border-radius: 6px; 
-            cursor: pointer; 
-            transition: all 0.2s;
-            flex: 1; /* allow spreading out evenly */
-            max-width: 150px;
-        } 
-        .btn-nav:hover { opacity: 0.9; transform: translateY(-1px); }
-        .btn-print { background-color: #27ae60; /* Distinct green for print action */ }
-
-        .question-box { background: var(--beige); padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid var(--dark); }
-        .question-text { font-size: 1.25em; font-weight: bold; color: var(--dark); margin: 0; }
-
-        /* INPUT AREA */
-        label { font-weight: bold; display: block; margin-bottom: 5px; color: var(--dark); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
-        textarea { 
-            width: 100%; height: 120px; padding: 15px; border: 2px solid #ccc; border-radius: 8px; 
-            font-size: 16px; box-sizing: border-box; resize: vertical; font-family: inherit; 
-            margin-bottom: 10px; background-color: #fafafa;
+        .btn-nav-top {
+            padding: 10px 20px; border: none; border-radius: 8px;
+            font-weight: bold; font-size: 1rem; color: white; cursor: pointer;
+            transition: opacity 0.2s; display: flex; align-items: center; justify-content: center;
         }
-        textarea:focus { border-color: var(--sky); outline: none; background-color: white; }
+        .btn-nav-top:hover { opacity: 0.9; }
+        .btn-prev, .btn-next { background-color: var(--dark-blue); flex: 1; max-width: 120px; }
+        .btn-print { background-color: var(--green); flex: 2; }
 
-        /* MAIN CONTROLS (Save, Listen, Record) */
-        .controls { display: flex; gap: 10px; margin: 15px 0 25px 0; flex-wrap: wrap; }
-        button { 
-            flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 15px; 
-            cursor: pointer; font-weight: bold; color: white; transition: all 0.2s; 
+        /* INNER WHITE CARD (The Question Area) */
+        .inner-card {
+            background: var(--inner-bg);
+            border: 2px solid var(--dark-blue);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .question-text { font-size: 1.4rem; font-weight: 800; color: var(--dark-blue); margin: 0 0 20px 0; }
+
+        /* TEXTAREAS & LABELS */
+        .input-label { 
+            font-weight: bold; display: block; margin-bottom: 8px; 
+            color: var(--dark-blue); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; 
+        }
+        textarea, .transcript-box { 
+            width: 100%; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px; 
+            font-size: 1rem; box-sizing: border-box; font-family: inherit; 
+            background-color: var(--white); box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+        textarea { height: 110px; resize: vertical; margin-bottom: 20px; }
+        textarea:focus { border-color: var(--sky-blue); outline: none; }
+        textarea::placeholder { color: #888; font-style: italic; }
+
+        /* ACTION CONTROLS (Save/Listen/Record) */
+        .action-controls { display: flex; gap: 15px; margin-bottom: 25px; }
+        .btn-action { 
+            flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 1rem; 
+            font-weight: bold; color: white; cursor: pointer; transition: transform 0.1s;
             display: flex; align-items: center; justify-content: center; gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        button:active { transform: scale(0.98); }
+        .btn-action:active { transform: translateY(1px); box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        
+        .btn-save { background-color: var(--dark-blue); }
+        .btn-listen { background-color: var(--sky-blue); }
+        .btn-record { background-color: var(--orange); }
+        .btn-record.recording { animation: pulse-orange 1.5s infinite; }
 
-        .btn-save { background-color: var(--dark); } 
-        .btn-speak { background-color: var(--sky); }
-        
-        .btn-record { background-color: white; color: var(--dark); border: 2px solid var(--dark); padding: 10px; }
-        .btn-record:hover { background-color: var(--beige); }
-        .btn-record.recording { background-color: var(--dark); color: white; border-color: var(--dark); animation: pulse-blue 1.5s infinite; }
-        
-        /* TRANSCRIPT & ANALYSIS */
-        .transcript-container { background-color: var(--beige); border: 2px solid var(--sky); border-radius: 8px; padding: 15px; margin-top: 10px; position: relative; }
-        .transcript-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.85em; color: var(--dark); font-weight: bold; text-transform: uppercase; }
-        .transcript-text { font-style: italic; color: #444; min-height: 40px; font-size: 1.05em; line-height: 1.5; }
-        
-        .btn-compare { 
-            background-color: white; 
-            border: 1px solid var(--sky); 
-            color: var(--dark);
-            padding: 4px 10px; 
-            font-size: 0.8rem; 
-            flex: 0 0 auto; 
-            width: auto;
-            border-radius: 4px;
+        @keyframes pulse-orange {
+            0% { box-shadow: 0 0 0 0 rgba(242, 107, 56, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(242, 107, 56, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(242, 107, 56, 0); }
         }
-        .btn-compare:hover { background-color: var(--sky); color: white; }
-        
-        #analysis-result { margin-top: 15px; padding: 15px; background-color: #fff; border-left: 5px solid var(--sky); font-size: 0.95em; display: none; color: #333; }
 
-        /* PAGINATION */
-        .pagination { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 30px; margin-bottom: 20px;}
+        /* TRANSCRIPT SECTION (Bottom of inner card) */
+        .transcript-row { display: flex; gap: 15px; align-items: stretch; }
+        .transcript-box { 
+            flex: 1; min-height: 50px; display: flex; align-items: center; 
+            color: #555; font-style: italic; margin: 0;
+        }
+        .btn-analyze {
+            background-color: var(--dark-blue); color: white; border: none; border-radius: 8px;
+            font-weight: bold; padding: 0 20px; cursor: pointer; display: flex; align-items: center; gap: 5px;
+        }
+
+        #analysis-result { margin-top: 15px; padding: 15px; background-color: var(--white); border-left: 4px solid var(--sky-blue); border-radius: 4px; font-size: 0.95em; display: none; }
+
+        /* PAGINATION BUBBLES */
+        .pagination { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 25px; padding: 0 20px;}
         .page-btn {
-            width: 40px; height: 40px; flex: none; border-radius: 50%;
-            border: 2px solid var(--sky); background-color: var(--white);
-            color: var(--dark); font-weight: bold; font-size: 14px;
+            width: 32px; height: 32px; flex: none; border-radius: 50%;
+            border: 1px solid var(--dark-blue); background-color: transparent;
+            color: var(--dark-blue); font-weight: bold; font-size: 0.85rem;
             cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; padding: 0;
         }
-        .page-btn:hover { background-color: var(--beige); }
-        .page-btn.active { background-color: var(--dark); color: var(--white); border-color: var(--dark); transform: scale(1.1); }
+        .page-btn:hover { background-color: rgba(255,255,255,0.5); }
+        .page-btn.active { background-color: var(--dark-blue); color: var(--white); transform: scale(1.1); }
 
-        /* FOOTER PROMPT */
+        /* AI PROMPT FOOTER */
         .prompt-footer {
-            margin-top: 30px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-top: 2px dashed #ccc;
-            border-radius: 0 0 15px 15px; 
-            font-size: 0.9em;
-            color: #555;
+            background: rgba(255, 255, 255, 0.8); border-radius: 12px; padding: 20px;
         }
-        .prompt-title { font-weight: bold; color: var(--dark); margin-bottom: 5px; display: flex; align-items: center; gap: 5px; }
+        .prompt-title { font-weight: bold; color: var(--dark-blue); margin-bottom: 5px; font-size: 1.1rem; }
+        .prompt-desc { font-size: 0.85rem; color: #555; margin-top: 0; margin-bottom: 10px; }
+        
+        .prompt-box-row { display: flex; gap: 10px; align-items: stretch; }
         .prompt-text {
-            background: #fff; border: 1px solid #ddd; padding: 10px; border-radius: 6px;
-            font-family: monospace; color: #333; margin-bottom: 10px; white-space: pre-wrap;
+            flex: 1; background: var(--white); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px;
+            font-family: monospace; color: #444; font-size: 0.85rem; white-space: pre-wrap; margin: 0;
         }
         .btn-copy { 
-            background-color: #666; width: auto; font-size: 0.8em; padding: 5px 15px; margin-left: auto; display: block; flex: 0 0 auto;
+            background-color: var(--dark-blue); color: white; border: none; border-radius: 8px;
+            padding: 0 15px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px;
         }
-        .btn-copy:hover { background-color: #444; }
 
-        #toast { visibility: hidden; min-width: 250px; background-color: var(--dark); color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; z-index: 99; left: 50%; transform: translateX(-50%); bottom: 30px; font-size: 17px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border: 1px solid var(--sky); }
+        #toast { visibility: hidden; min-width: 250px; background-color: var(--dark-blue); color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; z-index: 99; left: 50%; transform: translateX(-50%); bottom: 30px; font-size: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
         
-        @keyframes pulse-blue {
-            0% { box-shadow: 0 0 0 0 rgba(44, 170, 255, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(44, 170, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(44, 170, 255, 0); }
-        }
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
 
-        /* --- PRINT STYLES --- */
+        /* PRINT STYLES */
         #print-area { display: none; }
         @media print {
             body { background: none; background-color: white; padding: 0; color: black; }
-            .container, #toast, .nav-controls, .controls, .transcript-container, .pagination, .prompt-footer, .tabs-container { 
-                display: none !important; 
-            }
-            #print-area { 
-                display: block; 
-                padding: 20px;
-                max-width: 800px;
-                margin: 0 auto;
-            }
+            .container { display: none !important; }
+            #print-area { display: block; padding: 20px; max-width: 800px; margin: 0 auto; }
             #print-area h1 { color: black; text-align: center; border-bottom: 2px solid black; padding-bottom: 10px; margin-bottom: 30px; }
             .print-qa-block { margin-bottom: 25px; page-break-inside: avoid; }
             .print-question { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; color: black; }
             .print-answer { font-size: 1rem; white-space: pre-wrap; line-height: 1.5; padding: 10px; background: #f9f9f9; border-left: 4px solid #333; }
-            .print-no-answer { color: #888; font-style: italic; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="logo-container">
-        <img src="mylogo.png" alt="App Logo" class="logo-img" onerror="this.style.display='none'">
+    
+    <!-- HEADER -->
+    <div class="header-section">
+        <img src="mylogo.png" alt="Campuslands Logo" class="logo-img" onerror="this.style.display='none'">
+        <h2>Interview Preparation Coach</h2>
     </div>
-
-    <h2>Interview Preparation Coach</h2>
 
     <!-- TABS -->
     <div class="tabs-container">
@@ -216,43 +219,48 @@
         <button id="tab-standard" class="tab-btn" onclick="switchCategory('standard')">Standard (19)</button>
     </div>
     
-    <div class="nav-controls">
-        <button class="btn-nav" onclick="changeQuestion(-1)">⬅ Prev</button>
-        <button class="btn-nav btn-print" onclick="printAnswers()">🖨️ Print Answers</button>
-        <button class="btn-nav" onclick="changeQuestion(1)">Next ➡</button>
+    <!-- TOP NAVIGATION -->
+    <div class="top-nav">
+        <button class="btn-nav-top btn-prev" onclick="changeQuestion(-1)">← Prev</button>
+        <button class="btn-nav-top btn-print" onclick="preparePrint()">🖨️ Print Answers</button>
+        <button class="btn-nav-top btn-next" onclick="changeQuestion(1)">Next →</button>
     </div>
 
-    <div class="question-box">
+    <!-- INNER WHITE CARD -->
+    <div class="inner-card">
         <p class="question-text" id="question-text">Loading...</p>
-    </div>
 
-    <label for="answer-input">📝 Plan your answer here:</label>
-    <textarea id="answer-input" autocomplete="off" placeholder=""></textarea>
+        <span class="input-label">PLAN YOUR ANSWER HERE:</span>
+        <textarea id="answer-input" autocomplete="off" placeholder=""></textarea>
 
-    <div class="controls">
-        <button class="btn-save" onclick="saveData()">💾 Save</button>
-        <button class="btn-speak" onclick="speakAnswer()">🔊 Listen</button>
-        <button class="btn-record" id="mic-btn" onclick="toggleRecording()">🎤 Record</button>
-    </div>
-
-    <div id="transcript-box" class="transcript-container">
-        <div class="transcript-header">
-            <span>🗣️ What you actually said:</span>
-            <button class="btn-compare" onclick="analyzeSpeech()">🔍 Analyze</button>
+        <div class="action-controls">
+            <button class="btn-action btn-save" onclick="saveData()">💾 Save</button>
+            <button class="btn-action btn-listen" onclick="speakAnswer()">🔊 Listen</button>
+            <button class="btn-action btn-record" id="mic-btn" onclick="toggleRecording()">🎤 Record</button>
         </div>
-        <div id="transcript-content" class="transcript-text">
-            (Your recording will appear here...)
+
+        <span class="input-label">WHAT YOU ACTUALLY SAID:</span>
+        <div class="transcript-row">
+            <div id="transcript-content" class="transcript-box">
+                (Your recording will appear here...)
+            </div>
+            <button class="btn-analyze" onclick="analyzeSpeech()">🔍 Analyze</button>
         </div>
         <div id="analysis-result"></div>
     </div>
 
+    <!-- PAGINATION BUBBLES -->
     <div id="pagination" class="pagination"></div>
 
+    <!-- AI PROMPT FOOTER -->
     <div class="prompt-footer">
-        <div class="prompt-title">🤖 Need corrections? Use external AI</div>
-        <p style="margin: 5px 0;">Copy this prompt and paste it into ChatGPT, Gemini, or Claude along with your answer:</p>
-        <div class="prompt-text" id="ai-prompt-text">Act as an expert English Interview Coach. Correct the grammar and vocabulary of my answer to be more professional. Keep it natural. My answer is: [PASTE YOUR ANSWER HERE]</div>
-        <button class="btn-copy" onclick="copyPrompt()">📋 Copy Prompt</button>
+        <div class="prompt-title">Need corrections? Use external AI</div>
+        <p class="prompt-desc">Copy this prompt and paste it into ChatGPT, Gemini, or Claude along with your answer.</p>
+        
+        <div class="prompt-box-row">
+            <div class="prompt-text" id="ai-prompt-text">Act as an expert English Interview Coach. Correct the grammar and vocabulary of my answer to be more professional. Keep it natural. My answer is: [PASTE YOUR ANSWER HERE]</div>
+            <button class="btn-copy" onclick="copyPrompt()">📋 Copy Prompt</button>
+        </div>
     </div>
 
 </div>
@@ -269,7 +277,7 @@
       });
     }
 
-    // --- QUESTION SETS (Basic and Standard) ---
+    // --- QUESTION SETS ---
     const questionSets = {
         basic: [
             { text: "1. What's your full name?", hint: "Suggestion: State your full name clearly." },
@@ -316,7 +324,7 @@
         ]
     };
 
-    let currentCategory = 'basic'; // Set Basic as the default landing page
+    let currentCategory = 'basic'; 
     let currentIndex = 0;
     
     const qText = document.getElementById("question-text");
@@ -325,22 +333,16 @@
     const analysisBox = document.getElementById("analysis-result");
     const paginationContainer = document.getElementById("pagination");
 
-    // --- GET STORAGE KEY BASED ON CATEGORY ---
     function getStorageKey(index) {
-        if (currentCategory === 'standard') {
-            return 'interview_q_' + index;
-        } else {
-            return 'interview_basic_q_' + index;
-        }
+        if (currentCategory === 'standard') return 'interview_q_' + index;
+        return 'interview_basic_q_' + index;
     }
 
-    // --- TAB SWITCHING LOGIC ---
     function switchCategory(category) {
-        saveData(); // Save whatever they were doing before switching
+        saveData(); 
         currentCategory = category;
         currentIndex = 0; 
         
-        // Update tab buttons UI
         document.getElementById("tab-basic").classList.remove("active");
         document.getElementById("tab-standard").classList.remove("active");
         document.getElementById("tab-" + category).classList.add("active");
@@ -349,12 +351,10 @@
         loadQuestion(0);
     }
 
-    // --- AUTO-SAVE ON TYPING ---
     inputArea.addEventListener('input', function() {
         localStorage.setItem(getStorageKey(currentIndex), inputArea.value);
     });
 
-    // Initialize UI on load
     renderPagination();
     loadQuestion(0);
 
@@ -418,27 +418,16 @@
 
     function copyPrompt() {
         const promptText = document.getElementById("ai-prompt-text").innerText;
-        // Fallback for older browsers
         if (!navigator.clipboard) {
             document.execCommand('copy');
-            showCopyToast();
+            showToast("📋 Prompt Copied!");
             return;
         }
-        navigator.clipboard.writeText(promptText).then(() => {
-            showCopyToast();
-        });
+        navigator.clipboard.writeText(promptText).then(() => showToast("📋 Prompt Copied!"));
     }
 
-    function showCopyToast() {
-        const x = document.getElementById("toast");
-        x.innerText = "📋 Prompt Copied!";
-        x.className = "show";
-        setTimeout(() => x.className = x.className.replace("show", ""), 3000);
-    }
-
-    // --- PRINT FUNCTIONALITY (UPDATED FOR CATEGORIES) ---
-    function printAnswers() {
-        saveData(); // Ensure current is saved
+    function preparePrint() {
+        saveData(); 
         const printArea = document.getElementById('print-area');
         const currentData = questionSets[currentCategory];
         const categoryTitle = currentCategory === 'standard' ? 'Standard Questions' : 'Basic Questions';
@@ -450,9 +439,7 @@
             printHTML += `
                 <div class="print-qa-block">
                     <div class="print-question">${q.text}</div>
-                    <div class="print-answer">
-                        ${savedAnswer ? savedAnswer : '<span class="print-no-answer">No answer provided yet.</span>'}
-                    </div>
+                    <div class="print-answer">${savedAnswer ? savedAnswer : '<span style="color:#888; font-style:italic;">No answer provided yet.</span>'}</div>
                 </div>
             `;
         });
@@ -475,7 +462,7 @@
         
         const score = typed.filter(w=>w.length>2).length > 0 ? Math.round((match/typed.filter(w=>w.length>2).length)*100) : 0;
         
-        analysisBox.innerHTML = `<strong>Score: <span style="color:var(--sky)">${score}%</span></strong><br>` + 
+        analysisBox.innerHTML = `<strong>Score: <span style="color:var(--sky-blue)">${score}%</span></strong><br>` + 
         (missing.length ? `<p style="font-size:0.9em;color:#555">Missed words:</p><div style="color:red;font-style:italic">${missing.join(", ")}</div>` : `<p style="color:green">Perfect match!</p>`);
         analysisBox.style.display = "block";
     }
@@ -490,7 +477,7 @@
                 e.results[i].isFinal ? final += e.results[i][0].transcript + ' ' : interim += e.results[i][0].transcript;
             if (final || interim) {
                 if(transcriptContent.innerText.includes("recording will appear")) transcriptContent.innerText = "";
-                transcriptContent.innerHTML = `<strong>${final}</strong><span style="color:#2CAAFF">${interim}</span>`;
+                transcriptContent.innerHTML = `<strong>${final}</strong><span style="color:var(--sky-blue)">${interim}</span>`;
             }
         };
     } else { micBtn.style.display = 'none'; }
