@@ -464,12 +464,15 @@
         window.print(); 
     };
 
-    // --- GEMINI AI INTEGRATION (PRO MODE) ---
-    const apiKey = "AQ.Ab8RN6Jyh2u4WjVhQk79d9Dtx_0bLyeMrSQz1ryOUtRcuxB7Sw"; // API Key provided by execution environment
+// --- GEMINI AI INTEGRATION (PRO MODE) ---
+    const apiKey = "AQ.Ab8RN6Jyh2u4WjVhQk79d9Dtx_0bLyeMrSQz1ryOUtRcuxB7Sw"; 
     let currentProQuestion = "";
 
     async function callGemini(promptText) {
+        // Using the stable, public 1.5-flash model. 
+        // Do not use the 2.5-preview model as it will cause a 403 Forbidden error!
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        
         const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -477,6 +480,7 @@
                 contents: [{ parts: [{ text: promptText }] }]
             })
         });
+        
         const result = await response.json();
         if(result.error) throw new Error(result.error.message);
         return result.candidates[0].content.parts[0].text;
