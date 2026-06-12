@@ -9,184 +9,119 @@
     <link rel="apple-touch-icon" href="icon-512.png">
 
     <style>
-        /* --- COLOR PALETTE BASED ON IMAGE --- */
+        /* --- COLOR PALETTE --- */
         :root {
-            --dark-blue: #1a2b4c;      /* Main text and dark buttons */
-            --sky-blue: #2CA8FF;       /* Listen button */
-            --orange: #f26b38;         /* Record button */
-            --green: #4caf50;          /* Print button */
-            --bg-glass: rgba(255, 255, 255, 0.65); /* Glassmorphism background */
-            --inner-bg: #f8f9fa;       /* Inner card background */
+            --dark-blue: #1a2b4c;
+            --sky-blue: #2CA8FF;
+            --orange: #f26b38;
+            --green: #4caf50;
+            --purple: #8a2be2;
+            --bg-glass: rgba(255, 255, 255, 0.75);
+            --inner-bg: #f8f9fa;
             --white: #ffffff;
             --border-color: #cbd5e1;
         }
 
         body { 
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            margin: 0; 
-            padding: 20px; 
-            color: var(--dark-blue);
+            margin: 0; padding: 20px; color: var(--dark-blue);
             min-height: 100vh;
-            /* Update 'background.jpg' to your specific office image */
             background: url('background.jpg') no-repeat center center fixed; 
             background-size: cover;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            display: flex; justify-content: center; align-items: flex-start;
         }
+
+        /* OVERLAYS */
+        #auth-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(26, 43, 76, 0.9); z-index: 1000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; color: white;
+        }
+        .auth-box {
+            background: var(--white); padding: 40px; border-radius: 15px; text-align: center; color: var(--dark-blue);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); max-width: 400px; width: 90%;
+        }
+        .btn-auth {
+            background: var(--dark-blue); color: white; border: none; padding: 12px 25px; border-radius: 8px;
+            font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 20px; width: 100%;
+        }
+        .btn-auth:hover { opacity: 0.9; }
 
         /* THE GLASS CONTAINER */
         .container { 
-            width: 100%;
-            max-width: 800px; 
-            margin: 10px auto; 
-            background: var(--bg-glass); 
-            padding: 30px; 
-            border-radius: 20px; 
+            width: 100%; max-width: 800px; margin: 10px auto; 
+            background: var(--bg-glass); padding: 30px; border-radius: 20px; 
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); 
-            backdrop-filter: blur(12px); /* Strong blur for glass effect */
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.5); display: none;
         }
 
-        /* LOGO & TITLE */
-        .header-section { text-align: center; margin-bottom: 20px; }
+        .header-section { text-align: center; margin-bottom: 20px; position: relative; }
         .logo-img { max-width: 200px; height: auto; margin-bottom: 10px;}
-        h2 { color: var(--dark-blue); margin: 0; font-size: 1.8rem; letter-spacing: 0.5px; }
+        h2 { margin: 0; font-size: 1.8rem; letter-spacing: 0.5px; }
+        .user-badge { position: absolute; right: 0; top: 0; font-size: 0.8rem; background: var(--dark-blue); color: white; padding: 4px 10px; border-radius: 20px; }
 
-        /* TABS (PILL DESIGN) */
+        /* TABS */
         .tabs-container {
-            display: flex;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 30px;
-            margin: 20px auto;
-            max-width: 500px;
-            border: 1px solid var(--border-color);
-            overflow: hidden;
+            display: flex; background: rgba(255, 255, 255, 0.8); border-radius: 30px;
+            margin: 20px auto; max-width: 600px; border: 1px solid var(--border-color);
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
         .tab-btn {
-            flex: 1; padding: 12px; border: none; background: transparent;
-            color: #555; font-weight: bold; font-size: 1rem;
-            cursor: pointer; transition: all 0.3s;
+            flex: 1; padding: 12px; border: none; background: transparent; color: #555; 
+            font-weight: bold; font-size: 1rem; cursor: pointer; transition: all 0.3s;
         }
-        .tab-btn.active {
-            background: var(--dark-blue);
-            color: var(--white);
-            border-radius: 30px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
+        .tab-btn.active { background: var(--dark-blue); color: var(--white); border-radius: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .tab-pro.active { background: var(--purple); }
 
-        /* TOP NAVIGATION (PREV/PRINT/NEXT) */
-        .top-nav {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 25px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .btn-nav-top {
-            padding: 10px 20px; border: none; border-radius: 8px;
-            font-weight: bold; font-size: 1rem; color: white; cursor: pointer;
-            transition: opacity 0.2s; display: flex; align-items: center; justify-content: center;
-        }
-        .btn-nav-top:hover { opacity: 0.9; }
-        .btn-prev, .btn-next { background-color: var(--dark-blue); flex: 1; max-width: 120px; }
+        /* STANDARD UI ELEMENTS */
+        .standard-ui { display: block; }
+        .top-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; max-width: 600px; margin: 0 auto 25px auto; }
+        .btn-nav-top { padding: 10px 20px; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; color: white; cursor: pointer; transition: opacity 0.2s; flex: 1; }
+        .btn-prev, .btn-next { background-color: var(--dark-blue); max-width: 120px; }
         .btn-print { background-color: var(--green); flex: 2; }
 
-        /* INNER WHITE CARD (The Question Area) */
-        .inner-card {
-            background: var(--inner-bg);
-            border: 2px solid var(--dark-blue);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-
-        .question-text { font-size: 1.4rem; font-weight: 800; color: var(--dark-blue); margin: 0 0 20px 0; }
-
-        /* TEXTAREAS & LABELS */
-        .input-label { 
-            font-weight: bold; display: block; margin-bottom: 8px; 
-            color: var(--dark-blue); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; 
-        }
-        textarea, .transcript-box { 
+        .inner-card { background: var(--inner-bg); border: 2px solid var(--dark-blue); border-radius: 12px; padding: 25px; margin-bottom: 25px; }
+        .question-text { font-size: 1.4rem; font-weight: 800; margin: 0 0 20px 0; }
+        .input-label { font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.85rem; text-transform: uppercase; }
+        textarea, .transcript-box, .ai-box { 
             width: 100%; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px; 
-            font-size: 1rem; box-sizing: border-box; font-family: inherit; 
-            background-color: var(--white); box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+            font-size: 1rem; box-sizing: border-box; font-family: inherit; background-color: var(--white);
         }
         textarea { height: 110px; resize: vertical; margin-bottom: 20px; }
         textarea:focus { border-color: var(--sky-blue); outline: none; }
-        textarea::placeholder { color: #888; font-style: italic; }
-
-        /* ACTION CONTROLS (Save/Listen/Record) */
-        .action-controls { display: flex; gap: 15px; margin-bottom: 25px; }
-        .btn-action { 
-            flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 1rem; 
-            font-weight: bold; color: white; cursor: pointer; transition: transform 0.1s;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .btn-action:active { transform: translateY(1px); box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
         
+        .action-controls { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+        .btn-action { 
+            flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; color: white; cursor: pointer;
+        }
         .btn-save { background-color: var(--dark-blue); }
         .btn-listen { background-color: var(--sky-blue); }
         .btn-record { background-color: var(--orange); }
         .btn-record.recording { animation: pulse-orange 1.5s infinite; }
 
-        @keyframes pulse-orange {
-            0% { box-shadow: 0 0 0 0 rgba(242, 107, 56, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(242, 107, 56, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(242, 107, 56, 0); }
-        }
-
-        /* TRANSCRIPT SECTION (Bottom of inner card) */
         .transcript-row { display: flex; gap: 15px; align-items: stretch; }
-        .transcript-box { 
-            flex: 1; min-height: 50px; display: flex; align-items: center; 
-            color: #555; font-style: italic; margin: 0;
-        }
-        .btn-analyze {
-            background-color: var(--dark-blue); color: white; border: none; border-radius: 8px;
-            font-weight: bold; padding: 0 20px; cursor: pointer; display: flex; align-items: center; gap: 5px;
-        }
+        .transcript-box { flex: 1; min-height: 50px; display: flex; align-items: center; color: #555; font-style: italic; margin: 0; }
+        .btn-analyze { background-color: var(--dark-blue); color: white; border: none; border-radius: 8px; font-weight: bold; padding: 0 20px; cursor: pointer; }
+        #analysis-result { margin-top: 15px; padding: 15px; background-color: var(--white); border-left: 4px solid var(--sky-blue); border-radius: 4px; display: none; }
 
-        #analysis-result { margin-top: 15px; padding: 15px; background-color: var(--white); border-left: 4px solid var(--sky-blue); border-radius: 4px; font-size: 0.95em; display: none; }
-
-        /* PAGINATION BUBBLES */
         .pagination { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 25px; padding: 0 20px;}
-        .page-btn {
-            width: 32px; height: 32px; flex: none; border-radius: 50%;
-            border: 1px solid var(--dark-blue); background-color: transparent;
-            color: var(--dark-blue); font-weight: bold; font-size: 0.85rem;
-            cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; padding: 0;
-        }
-        .page-btn:hover { background-color: rgba(255,255,255,0.5); }
-        .page-btn.active { background-color: var(--dark-blue); color: var(--white); transform: scale(1.1); }
+        .page-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--dark-blue); background: transparent; color: var(--dark-blue); font-weight: bold; cursor: pointer; }
+        .page-btn.active { background: var(--dark-blue); color: var(--white); transform: scale(1.1); }
 
-        /* AI PROMPT FOOTER */
-        .prompt-footer {
-            background: rgba(255, 255, 255, 0.8); border-radius: 12px; padding: 20px;
-        }
-        .prompt-title { font-weight: bold; color: var(--dark-blue); margin-bottom: 5px; font-size: 1.1rem; }
-        .prompt-desc { font-size: 0.85rem; color: #555; margin-top: 0; margin-bottom: 10px; }
-        
-        .prompt-box-row { display: flex; gap: 10px; align-items: stretch; }
-        .prompt-text {
-            flex: 1; background: var(--white); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px;
-            font-family: monospace; color: #444; font-size: 0.85rem; white-space: pre-wrap; margin: 0;
-        }
-        .btn-copy { 
-            background-color: var(--dark-blue); color: white; border: none; border-radius: 8px;
-            padding: 0 15px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px;
-        }
+        /* --- PRO UI ELEMENTS --- */
+        .pro-ui { display: none; }
+        .pro-card { background: #f4f0ff; border: 2px solid var(--purple); border-radius: 12px; padding: 25px; margin-bottom: 25px; }
+        .ai-message { border-left: 4px solid var(--purple); background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 1.1rem; line-height: 1.5;}
+        .btn-pro-action { background: var(--purple); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1.1rem; margin-bottom: 15px;}
+        .btn-pro-action:hover { opacity: 0.9; }
+        .feedback-box { background: white; border: 1px solid var(--purple); border-radius: 8px; padding: 20px; margin-top: 20px; display: none; line-height: 1.6;}
+        .feedback-box h4 { margin-top: 0; color: var(--purple); }
 
-        #toast { visibility: hidden; min-width: 250px; background-color: var(--dark-blue); color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; z-index: 99; left: 50%; transform: translateX(-50%); bottom: 30px; font-size: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        #toast { visibility: hidden; min-width: 250px; background-color: var(--dark-blue); color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; left: 50%; transform: translateX(-50%); bottom: 30px; font-size: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 9999;}
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
         
+        @keyframes pulse-orange { 0% { box-shadow: 0 0 0 0 rgba(242, 107, 56, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(242, 107, 56, 0); } 100% { box-shadow: 0 0 0 0 rgba(242, 107, 56, 0); } }
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
 
@@ -194,90 +129,119 @@
         #print-area { display: none; }
         @media print {
             body { background: none; background-color: white; padding: 0; color: black; }
-            .container { display: none !important; }
+            .container, #auth-overlay { display: none !important; }
             #print-area { display: block; padding: 20px; max-width: 800px; margin: 0 auto; }
             #print-area h1 { color: black; text-align: center; border-bottom: 2px solid black; padding-bottom: 10px; margin-bottom: 30px; }
             .print-qa-block { margin-bottom: 25px; page-break-inside: avoid; }
             .print-question { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; color: black; }
             .print-answer { font-size: 1rem; white-space: pre-wrap; line-height: 1.5; padding: 10px; background: #f9f9f9; border-left: 4px solid #333; }
         }
+        .loading-spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,.3); border-radius: 50%; border-top-color: #fff; animation: spin 1s ease-in-out infinite; margin-left: 10px; vertical-align: middle;}
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-<div class="container">
-    
-    <!-- HEADER -->
+<!-- AUTHENTICATION OVERLAY -->
+<div id="auth-overlay">
+    <div class="auth-box">
+        <img src="https://placehold.co/150x50/2CAAFF/white?text=LOGO" alt="Logo" style="max-width: 150px; margin-bottom: 20px; border-radius: 8px;">
+        <h2 style="color: var(--dark-blue);">Interview Coach</h2>
+        <p>Sign in to sync your answers securely to the cloud.</p>
+        <button class="btn-auth" onclick="startAuthFlow()" id="auth-btn">Authenticate with Google 🔒</button>
+    </div>
+</div>
+
+<div class="container" id="main-app">
     <div class="header-section">
-        <img src="mylogo.png" alt="Campuslands Logo" class="logo-img" onerror="this.style.display='none'">
+        <img src="https://placehold.co/150x50/2CAAFF/white?text=LOGO" alt="Logo" class="logo-img">
         <h2>Interview Preparation Coach</h2>
+        <div class="user-badge" id="user-badge">Syncing...</div>
     </div>
 
     <!-- TABS -->
     <div class="tabs-container">
         <button id="tab-basic" class="tab-btn active" onclick="switchCategory('basic')">Basic (20)</button>
         <button id="tab-standard" class="tab-btn" onclick="switchCategory('standard')">Standard (19)</button>
+        <button id="tab-pro" class="tab-btn tab-pro" onclick="switchCategory('pro')">Pro (AI) ✨</button>
     </div>
     
-    <!-- TOP NAVIGATION -->
-    <div class="top-nav">
-        <button class="btn-nav-top btn-prev" onclick="changeQuestion(-1)">← Prev</button>
-        <button class="btn-nav-top btn-print" onclick="preparePrint()">🖨️ Print Answers</button>
-        <button class="btn-nav-top btn-next" onclick="changeQuestion(1)">Next →</button>
-    </div>
-
-    <!-- INNER WHITE CARD -->
-    <div class="inner-card">
-        <p class="question-text" id="question-text">Loading...</p>
-
-        <span class="input-label">PLAN YOUR ANSWER HERE:</span>
-        <textarea id="answer-input" autocomplete="off" placeholder=""></textarea>
-
-        <div class="action-controls">
-            <button class="btn-action btn-save" onclick="saveData()">💾 Save</button>
-            <button class="btn-action btn-listen" onclick="speakAnswer()">🔊 Listen</button>
-            <button class="btn-action btn-record" id="mic-btn" onclick="toggleRecording()">🎤 Record</button>
+    <!-- ================= STANDARD UI ================= -->
+    <div id="standard-ui" class="standard-ui">
+        <div class="top-nav">
+            <button class="btn-nav-top btn-prev" onclick="changeQuestion(-1)">← Prev</button>
+            <button class="btn-nav-top btn-print" onclick="preparePrint()">🖨️ Print Answers</button>
+            <button class="btn-nav-top btn-next" onclick="changeQuestion(1)">Next →</button>
         </div>
 
-        <span class="input-label">WHAT YOU ACTUALLY SAID:</span>
-        <div class="transcript-row">
-            <div id="transcript-content" class="transcript-box">
-                (Your recording will appear here...)
+        <div class="inner-card">
+            <p class="question-text" id="question-text">Loading...</p>
+
+            <span class="input-label">PLAN YOUR ANSWER HERE:</span>
+            <textarea id="answer-input" autocomplete="off" placeholder=""></textarea>
+
+            <div class="action-controls">
+                <button class="btn-action btn-listen" onclick="speakAnswer()">🔊 Listen</button>
+                <button class="btn-action btn-record" id="mic-btn-standard" onclick="toggleRecording('standard')">🎤 Record</button>
             </div>
-            <button class="btn-analyze" onclick="analyzeSpeech()">🔍 Analyze</button>
+
+            <span class="input-label">WHAT YOU ACTUALLY SAID:</span>
+            <div class="transcript-row">
+                <div id="transcript-content" class="transcript-box">(Your recording will appear here...)</div>
+                <button class="btn-analyze" onclick="analyzeSpeech()">🔍 Analyze</button>
+            </div>
+            <div id="analysis-result"></div>
         </div>
-        <div id="analysis-result"></div>
+
+        <div id="pagination" class="pagination"></div>
     </div>
 
-    <!-- PAGINATION BUBBLES -->
-    <div id="pagination" class="pagination"></div>
-
-    <!-- AI PROMPT FOOTER -->
-    <div class="prompt-footer">
-        <div class="prompt-title">Need corrections? Use external AI</div>
-        <p class="prompt-desc">Copy this prompt and paste it into ChatGPT, Gemini, or Claude along with your answer.</p>
-        
-        <div class="prompt-box-row">
-            <div class="prompt-text" id="ai-prompt-text">Act as an expert English Interview Coach. Correct the grammar and vocabulary of my answer to be more professional. Keep it natural. My answer is: [PASTE YOUR ANSWER HERE]</div>
-            <button class="btn-copy" onclick="copyPrompt()">📋 Copy Prompt</button>
+    <!-- ================= PRO UI (AI SIMULATOR) ================= -->
+    <div id="pro-ui" class="pro-ui">
+        <div class="pro-card">
+            <button class="btn-pro-action" onclick="generateProQuestion()" id="btn-generate-q">Generate New Interview Question 🤖</button>
+            
+            <div id="pro-question-area" style="display: none;">
+                <span class="input-label" style="color: var(--purple);">AI INTERVIEWER:</span>
+                <div class="ai-message" id="pro-ai-question">Thinking...</div>
+                
+                <span class="input-label">YOUR RESPONSE (Record or Type):</span>
+                <textarea id="pro-answer-input" placeholder="Tap Record to speak, or type your answer here..."></textarea>
+                
+                <div class="action-controls" style="margin-bottom: 15px;">
+                    <button class="btn-action btn-record" id="mic-btn-pro" onclick="toggleRecording('pro')" style="background-color: var(--purple);">🎤 Record Answer</button>
+                    <button class="btn-action" onclick="submitProAnswer()" id="btn-submit-pro" style="background-color: #333;">Submit for Feedback 🧠</button>
+                </div>
+                
+                <div class="feedback-box" id="pro-feedback-box"></div>
+            </div>
         </div>
     </div>
 
 </div>
 
-<!-- Hidden area populated specifically for printing -->
 <div id="print-area"></div>
+<div id="toast">✅ Action Successful!</div>
 
-<div id="toast">✅ Answer Saved!</div>
+<!-- ================= FIREBASE & LOGIC ================= -->
+<script type="module">
+    // Firebase Imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-<script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js').catch(err => console.log('App Registration Failed:', err));
-      });
-    }
+    // Firebase Init
+    const firebaseConfig = JSON.parse(__firebase_config);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    let currentUser = null;
 
-    // --- QUESTION SETS ---
+    // Data Cache to prevent excessive Firestore reads
+    let dbAnswers = { basic: {}, standard: {} };
+
+    // Questions Data
     const questionSets = {
         basic: [
             { text: "1. What's your full name?", hint: "Suggestion: State your full name clearly." },
@@ -302,78 +266,137 @@
             { text: "20. Where do you live, and what do you like about your neighborhood?", hint: "Suggestion: State your location and one positive thing about it." }
         ],
         standard: [
-            { text: "1. Tell me about yourself", hint: "Suggestion: This question is often used as an icebreaker. Provide a summary of your professional background, skills, and career highlights." },
-            { text: "2. What are your strengths?", hint: "Suggestion: Discuss your key strengths and skills that are relevant to the job you're applying for." },
-            { text: "3. What are your weaknesses?", hint: "Suggestion: Be honest about a weakness, but also explain how you're actively working to improve or manage it." },
-            { text: "4. Why do you want to work for our company?", hint: "Suggestion: Show that you've done your research on the company and explain why you're interested in their mission, values, products, or culture." },
-            { text: "5. Why should we hire you?", hint: "Suggestion: Highlight your qualifications, experience, and how they align with the job's requirements." },
-            { text: "6. Tell me about a time when you faced a challenge at work and how you handled it.", hint: "Suggestion: This is a behavioral interview question. Use the STAR method (Situation, Task, Action, Result) to structure your response." },
-            { text: "7. Where do you see yourself in 5 years?", hint: "Suggestion: Describe your career goals and how you believe this job aligns with your long-term aspirations." },
-            { text: "8. What is your most significant professional achievement?", hint: "Suggestion: Discuss a specific accomplishment that demonstrates your skills and abilities." },
-            { text: "9. How do you handle stress and pressure?", hint: "Suggestion: Explain your strategies for managing stress and maintaining productivity in challenging situations." },
-            { text: "10. Describe a time when you worked as part of a team.", hint: "Suggestion: Share an example of your teamwork, emphasizing your collaboration and communication skills." },
-            { text: "11. What is your preferred work style?", hint: "Suggestion: Discuss your work habits and how they contribute to your effectiveness." },
-            { text: "12. Why did you leave your previous job?", hint: "Suggestion: Be tactful and focus on the desire for growth, new challenges, or better alignment with your career goals." },
-            { text: "13. What do you know about our industry/competitors?", hint: "Suggestion: Demonstrate your knowledge of the industry and the company's position within it." },
-            { text: "14. How do you stay updated with industry trends and developments?", hint: "Suggestion: Explain your methods for staying informed and relevant in your field." },
-            { text: "15. Do you have any questions for us?", hint: "Suggestion: Always have thoughtful questions prepared for the interviewer to demonstrate your interest and curiosity about the position and company." },
-            { text: "16. What motivates you?", hint: "Suggestion: Discuss the factors that drive you to excel in your work and personal life." },
-            { text: "17. How do you handle criticism or feedback?", hint: "Suggestion: Describe your receptiveness to feedback and how you use it to improve." },
-            { text: "18. How would you handle a situation where you disagree with your manager or team member?", hint: "Suggestion: Emphasize your ability to communicate and find common ground while respecting differences of opinion." },
-            { text: "19. Tell me about a time when you demonstrated leadership.", hint: "Suggestion: Share an example of your leadership skills and how you influenced or inspired others." }
+            { text: "1. Tell me about yourself", hint: "Suggestion: Provide a summary of your professional background, skills, and career highlights." },
+            { text: "2. What are your strengths?", hint: "Suggestion: Discuss your key strengths and skills that are relevant to the job." },
+            { text: "3. What are your weaknesses?", hint: "Suggestion: Be honest about a weakness, but also explain how you're actively working to improve it." },
+            { text: "4. Why do you want to work for our company?", hint: "Suggestion: Show that you've done your research on the company." },
+            { text: "5. Why should we hire you?", hint: "Suggestion: Highlight your qualifications and how they align with the job's requirements." },
+            { text: "6. Tell me about a time when you faced a challenge at work and how you handled it.", hint: "Suggestion: Use the STAR method." },
+            { text: "7. Where do you see yourself in 5 years?", hint: "Suggestion: Describe your career goals." },
+            { text: "8. What is your most significant professional achievement?", hint: "Suggestion: Discuss a specific accomplishment." },
+            { text: "9. How do you handle stress and pressure?", hint: "Suggestion: Explain your strategies for managing stress." },
+            { text: "10. Describe a time when you worked as part of a team.", hint: "Suggestion: Share an example emphasizing communication skills." },
+            { text: "11. What is your preferred work style?", hint: "Suggestion: Discuss your work habits." },
+            { text: "12. Why did you leave your previous job?", hint: "Suggestion: Focus on the desire for growth or new challenges." },
+            { text: "13. What do you know about our industry/competitors?", hint: "Suggestion: Demonstrate your knowledge of the industry." },
+            { text: "14. How do you stay updated with industry trends?", hint: "Suggestion: Explain your methods for staying informed." },
+            { text: "15. Do you have any questions for us?", hint: "Suggestion: Always have thoughtful questions prepared." },
+            { text: "16. What motivates you?", hint: "Suggestion: Discuss the factors that drive you." },
+            { text: "17. How do you handle criticism or feedback?", hint: "Suggestion: Describe your receptiveness to feedback." },
+            { text: "18. How would you handle a situation where you disagree with your manager?", hint: "Suggestion: Emphasize communication." },
+            { text: "19. Tell me about a time when you demonstrated leadership.", hint: "Suggestion: Share an example of leadership." }
         ]
     };
 
     let currentCategory = 'basic'; 
     let currentIndex = 0;
     
+    // UI Elements
     const qText = document.getElementById("question-text");
     const inputArea = document.getElementById("answer-input");
     const transcriptContent = document.getElementById("transcript-content");
     const analysisBox = document.getElementById("analysis-result");
     const paginationContainer = document.getElementById("pagination");
 
-    function getStorageKey(index) {
-        if (currentCategory === 'standard') return 'interview_q_' + index;
-        return 'interview_basic_q_' + index;
+    // --- AUTHENTICATION FLOW ---
+    window.startAuthFlow = async () => {
+        const btn = document.getElementById('auth-btn');
+        btn.innerHTML = "Authenticating... <span class='loading-spinner'></span>";
+        btn.disabled = true;
+        try {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+                await signInAnonymously(auth);
+            }
+        } catch (e) {
+            console.error("Auth Error", e);
+            btn.innerHTML = "Error. Try Again.";
+            btn.disabled = false;
+        }
+    };
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            currentUser = user;
+            document.getElementById('auth-overlay').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+            document.getElementById('user-badge').innerText = "Logged In: " + user.uid.substring(0,6) + "...";
+            await loadAllFirebaseData();
+            initUI();
+        }
+    });
+
+    // --- FIREBASE DATA SYNC ---
+    async function loadAllFirebaseData() {
+        if (!currentUser) return;
+        try {
+            const basicRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'answers', 'basic');
+            const stdRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'answers', 'standard');
+            
+            const [basicSnap, stdSnap] = await Promise.all([getDoc(basicRef), getDoc(stdRef)]);
+            
+            if(basicSnap.exists()) dbAnswers.basic = basicSnap.data();
+            if(stdSnap.exists()) dbAnswers.standard = stdSnap.data();
+        } catch(e) {
+            console.error("Data Load Error", e);
+        }
     }
 
-    function switchCategory(category) {
-        saveData(); 
-        currentCategory = category;
-        currentIndex = 0; 
+    let saveTimeout;
+    async function saveToFirebase(category, index, value) {
+        if (!currentUser) return;
+        dbAnswers[category][index] = value;
         
-        document.getElementById("tab-basic").classList.remove("active");
-        document.getElementById("tab-standard").classList.remove("active");
-        document.getElementById("tab-" + category).classList.add("active");
+        // Debounce to prevent too many writes
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(async () => {
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'answers', category);
+                await setDoc(docRef, dbAnswers[category], { merge: true });
+                showToast("✅ Auto-saved to Cloud");
+            } catch(e) {
+                console.error("Save Error", e);
+            }
+        }, 1500);
+    }
 
+    // --- UI NAVIGATION LOGIC ---
+    function initUI() {
         renderPagination();
         loadQuestion(0);
     }
 
+    window.switchCategory = (category) => {
+        currentCategory = category;
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById("tab-" + category).classList.add("active");
+
+        if (category === 'pro') {
+            document.getElementById('standard-ui').style.display = 'none';
+            document.getElementById('pro-ui').style.display = 'block';
+            stopRecording(); // ensure mic is off
+        } else {
+            document.getElementById('pro-ui').style.display = 'none';
+            document.getElementById('standard-ui').style.display = 'block';
+            currentIndex = 0; 
+            renderPagination();
+            loadQuestion(0);
+        }
+    };
+
     inputArea.addEventListener('input', function() {
-        localStorage.setItem(getStorageKey(currentIndex), inputArea.value);
+        saveToFirebase(currentCategory, currentIndex, inputArea.value);
     });
 
-    renderPagination();
-    loadQuestion(0);
-
     function renderPagination() {
-        const currentData = questionSets[currentCategory];
         paginationContainer.innerHTML = ""; 
-        currentData.forEach((_, index) => {
+        questionSets[currentCategory].forEach((_, index) => {
             const btn = document.createElement("button");
             btn.classList.add("page-btn");
             btn.innerText = index + 1;
-            btn.onclick = () => { saveData(); loadQuestion(index); };
+            btn.onclick = () => { loadQuestion(index); };
             paginationContainer.appendChild(btn);
-        });
-    }
-
-    function updatePaginationActiveState(index) {
-        document.querySelectorAll(".page-btn").forEach((btn, i) => {
-            if (i === index) btn.classList.add("active");
-            else btn.classList.remove("active");
         });
     }
 
@@ -384,50 +407,36 @@
         
         qText.innerText = currentData[currentIndex].text;
         inputArea.placeholder = currentData[currentIndex].hint;
-        updatePaginationActiveState(currentIndex);
+        
+        document.querySelectorAll(".page-btn").forEach((btn, i) => {
+            i === index ? btn.classList.add("active") : btn.classList.remove("active");
+        });
 
         transcriptContent.innerText = "(Your recording will appear here...)";
         analysisBox.style.display = "none";
 
-        const savedAnswer = localStorage.getItem(getStorageKey(currentIndex));
-        inputArea.value = savedAnswer || "";
+        inputArea.value = dbAnswers[currentCategory][currentIndex] || "";
     }
 
-    function saveData() {
-        localStorage.setItem(getStorageKey(currentIndex), inputArea.value);
-        showToast("✅ Answer Saved!");
-    }
+    window.changeQuestion = (dir) => loadQuestion(currentIndex + dir);
 
-    function changeQuestion(dir) { saveData(); loadQuestion(currentIndex + dir); }
-
-    function speakAnswer() {
+    window.speakAnswer = () => {
         const text = inputArea.value;
-        if (!text) return alert("Write an answer first!");
+        if (!text) return showToast("Write an answer first!");
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'en-US'; 
         window.speechSynthesis.speak(utterance);
-    }
+    };
 
     function showToast(message) {
         const x = document.getElementById("toast");
-        x.innerText = message || "✅ Answer Saved!";
+        x.innerText = message;
         x.className = "show";
         setTimeout(() => x.className = x.className.replace("show", ""), 3000);
     }
 
-    function copyPrompt() {
-        const promptText = document.getElementById("ai-prompt-text").innerText;
-        if (!navigator.clipboard) {
-            document.execCommand('copy');
-            showToast("📋 Prompt Copied!");
-            return;
-        }
-        navigator.clipboard.writeText(promptText).then(() => showToast("📋 Prompt Copied!"));
-    }
-
-    function preparePrint() {
-        saveData(); 
+    window.preparePrint = () => {
         const printArea = document.getElementById('print-area');
         const currentData = questionSets[currentCategory];
         const categoryTitle = currentCategory === 'standard' ? 'Standard Questions' : 'Basic Questions';
@@ -435,7 +444,7 @@
         let printHTML = `<h1>My Interview Preparation Answers - ${categoryTitle}</h1>`;
         
         currentData.forEach((q, index) => {
-            const savedAnswer = localStorage.getItem(getStorageKey(index));
+            const savedAnswer = dbAnswers[currentCategory][index];
             printHTML += `
                 <div class="print-qa-block">
                     <div class="print-question">${q.text}</div>
@@ -446,45 +455,173 @@
         
         printArea.innerHTML = printHTML;
         window.print(); 
+    };
+
+    // --- GEMINI AI INTEGRATION (PRO MODE) ---
+    const apiKey = ""; // API Key provided by execution environment
+    let currentProQuestion = "";
+
+    async function callGemini(promptText) {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: promptText }] }]
+            })
+        });
+        const result = await response.json();
+        if(result.error) throw new Error(result.error.message);
+        return result.candidates[0].content.parts[0].text;
     }
 
-    // --- SPEECH RECOGNITION ---
-    let recognition; let isRecording = false; const micBtn = document.getElementById("mic-btn");
+    window.generateProQuestion = async () => {
+        const btn = document.getElementById('btn-generate-q');
+        const qBox = document.getElementById('pro-ai-question');
+        const area = document.getElementById('pro-question-area');
+        const feedback = document.getElementById('pro-feedback-box');
+        const answerInput = document.getElementById('pro-answer-input');
 
-    function analyzeSpeech() {
+        btn.disabled = true;
+        btn.innerHTML = "Generating... <span class='loading-spinner'></span>";
+        area.style.display = 'block';
+        feedback.style.display = 'none';
+        qBox.innerText = "Thinking...";
+        answerInput.value = "";
+
+        const prompt = `You are a Senior Software Developer conducting a job interview. 
+        Ask ONE interview question. It can be a technical web development question or a behavioral question. 
+        Only output the question, nothing else.`;
+
+        try {
+            const text = await callGemini(prompt);
+            currentProQuestion = text;
+            qBox.innerText = text;
+            
+            // Speak it
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US'; 
+            window.speechSynthesis.speak(utterance);
+        } catch (e) {
+            qBox.innerText = "Error connecting to AI Interviewer. Please try again.";
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = "Generate New Interview Question 🤖";
+        }
+    };
+
+    window.submitProAnswer = async () => {
+        const answer = document.getElementById('pro-answer-input').value;
+        const btn = document.getElementById('btn-submit-pro');
+        const feedbackBox = document.getElementById('pro-feedback-box');
+
+        if(!answer.trim()) return showToast("Please record or type an answer first!");
+
+        btn.disabled = true;
+        btn.innerHTML = "Analyzing... <span class='loading-spinner'></span>";
+        feedbackBox.style.display = 'block';
+        feedbackBox.innerHTML = "<i>Analyzing your grammar and technical logic...</i>";
+
+        const prompt = `You are a Senior Software Developer interviewer. 
+        You asked the candidate: "${currentProQuestion}"
+        The candidate answered: "${answer}"
+        
+        Provide professional feedback. Format your response clearly with these headings:
+        1. Feedback on Content & Logic
+        2. Grammar & Language Improvements
+        3. Pro Tip for Next Time
+        Keep it concise and encouraging.`;
+
+        try {
+            const feedbackText = await callGemini(prompt);
+            // Format markdown-like text to basic HTML for display
+            const formattedHTML = feedbackText.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            feedbackBox.innerHTML = `<h4>AI Interviewer Feedback:</h4>${formattedHTML}`;
+        } catch (e) {
+            feedbackBox.innerHTML = "<span style='color:red;'>Error generating feedback. Please try again.</span>";
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = "Submit for Feedback 🧠";
+        }
+    };
+
+    // --- SPEECH RECOGNITION (SHARED FOR BOTH MODES) ---
+    let recognition; 
+    let isRecording = false; 
+    let currentRecordingMode = 'standard'; // 'standard' or 'pro'
+
+    window.analyzeSpeech = () => {
         const typed = inputArea.value.toLowerCase().replace(/[^\w\s]/g,"").split(/\s+/);
         const spoken = transcriptContent.innerText.toLowerCase().replace(/[^\w\s]/g,"").split(/\s+/);
         
-        if(!inputArea.value || transcriptContent.innerText.includes("recording will appear")) return alert("Type and record first!");
+        if(!inputArea.value || transcriptContent.innerText.includes("recording will appear")) return showToast("Type and record first!");
 
         let match = 0, missing = [];
         typed.forEach(w => { if(w.length>2) spoken.includes(w) ? match++ : missing.push(w); });
         
-        const score = typed.filter(w=>w.length>2).length > 0 ? Math.round((match/typed.filter(w=>w.length>2).length)*100) : 0;
+        const validWords = typed.filter(w=>w.length>2).length;
+        const score = validWords > 0 ? Math.round((match/validWords)*100) : 0;
         
         analysisBox.innerHTML = `<strong>Score: <span style="color:var(--sky-blue)">${score}%</span></strong><br>` + 
         (missing.length ? `<p style="font-size:0.9em;color:#555">Missed words:</p><div style="color:red;font-style:italic">${missing.join(", ")}</div>` : `<p style="color:green">Perfect match!</p>`);
         analysisBox.style.display = "block";
-    }
+    };
 
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         recognition = new SpeechRecognition();
         recognition.lang = 'en-US'; recognition.continuous = true; recognition.interimResults = true;
+        
         recognition.onresult = (e) => {
             let final = '', interim = '';
             for (let i = e.resultIndex; i < e.results.length; ++i) 
                 e.results[i].isFinal ? final += e.results[i][0].transcript + ' ' : interim += e.results[i][0].transcript;
-            if (final || interim) {
-                if(transcriptContent.innerText.includes("recording will appear")) transcriptContent.innerText = "";
-                transcriptContent.innerHTML = `<strong>${final}</strong><span style="color:var(--sky-blue)">${interim}</span>`;
+            
+            if (currentRecordingMode === 'standard') {
+                if (final || interim) {
+                    if(transcriptContent.innerText.includes("recording will appear")) transcriptContent.innerText = "";
+                    transcriptContent.innerHTML = `<strong>${final}</strong><span style="color:var(--sky-blue)">${interim}</span>`;
+                }
+            } else if (currentRecordingMode === 'pro') {
+                // In Pro Mode, append directly to the textarea
+                const input = document.getElementById('pro-answer-input');
+                if (final) input.value += final + ' ';
             }
         };
-    } else { micBtn.style.display = 'none'; }
+    }
 
-    function toggleRecording() { isRecording ? stopRecording() : startRecording(); }
-    function startRecording() { recognition.start(); isRecording = true; micBtn.innerHTML = "🛑 Stop"; micBtn.classList.add("recording"); analysisBox.style.display="none"; transcriptContent.innerText=""; }
-    function stopRecording() { recognition.stop(); isRecording = false; micBtn.innerHTML = "🎤 Record"; micBtn.classList.remove("recording"); }
+    window.toggleRecording = (mode) => { 
+        currentRecordingMode = mode;
+        isRecording ? stopRecording() : startRecording(); 
+    };
+
+    function startRecording() { 
+        if(!recognition) return showToast("Speech Recognition not supported in this browser.");
+        recognition.start(); 
+        isRecording = true; 
+        
+        if(currentRecordingMode === 'standard') {
+            const btn = document.getElementById("mic-btn-standard");
+            btn.innerHTML = "🛑 Stop"; btn.classList.add("recording"); 
+            analysisBox.style.display="none"; transcriptContent.innerText=""; 
+        } else {
+            const btn = document.getElementById("mic-btn-pro");
+            btn.innerHTML = "🛑 Stop Recording"; btn.classList.add("recording"); 
+        }
+    }
+
+    function stopRecording() { 
+        if(!recognition) return;
+        recognition.stop(); 
+        isRecording = false; 
+        
+        document.getElementById("mic-btn-standard").innerHTML = "🎤 Record"; 
+        document.getElementById("mic-btn-standard").classList.remove("recording");
+        
+        document.getElementById("mic-btn-pro").innerHTML = "🎤 Record Answer"; 
+        document.getElementById("mic-btn-pro").classList.remove("recording");
+    }
 
 </script>
 
