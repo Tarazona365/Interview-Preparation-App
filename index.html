@@ -227,15 +227,24 @@
 <script type="module">
     // Firebase Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // Firebase Init
-    const firebaseConfig = JSON.parse(__firebase_config);
+    // Firebase Init - REPLACE THESE VALUES WITH YOUR ACTUAL CONFIG FROM FIREBASE
+    const firebaseConfig = {
+        apiKey: "AIzaSyBQjdvuuV_iyv4EhEcykOD5frvoboFVlUo",
+        authDomain: "interview-coach-ea32c.firebaseapp.com",
+        projectId: "interview-coach-ea32c",
+        storageBucket: "interview-coach-ea32c.firebasestorage.app",
+        messagingSenderId: "49779562939",
+        appId: "1:49779562939:web:4dcaf2a9399f13d4644c9e"
+    };
+    
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
     const db = getFirestore(app);
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    const appId = 'interview-coach-db'; 
     let currentUser = null;
 
     // Data Cache to prevent excessive Firestore reads
@@ -304,15 +313,13 @@
         btn.innerHTML = "Authenticating... <span class='loading-spinner'></span>";
         btn.disabled = true;
         try {
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                await signInWithCustomToken(auth, __initial_auth_token);
-            } else {
-                await signInAnonymously(auth);
-            }
+            // Launch Real Google Login Window
+            await signInWithPopup(auth, provider);
         } catch (e) {
             console.error("Auth Error", e);
-            btn.innerHTML = "Error. Try Again.";
+            btn.innerHTML = "Authenticate with Google 🔒";
             btn.disabled = false;
+            alert("Login Failed. Make sure you added your GitHub link to Firebase Authorized Domains!");
         }
     };
 
@@ -458,7 +465,7 @@
     };
 
     // --- GEMINI AI INTEGRATION (PRO MODE) ---
-    const apiKey = ""; // API Key provided by execution environment
+    const apiKey = "AIzaSyCwwnWUBkwgBKCNF5ZhwcG80cHef306EyU"; // API Key provided by execution environment
     let currentProQuestion = "";
 
     async function callGemini(promptText) {
