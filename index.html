@@ -5,152 +5,132 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interview Preparation Coach</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#000087">
+    <meta name="theme-color" content="#1a2b4c">
     <link rel="apple-touch-icon" href="icon-512.png">
 
     <style>
-        /* --- STRICT 3-COLOR PALETTE (ORIGINAL VISUALS) --- */
+        /* --- COLOR PALETTE --- */
         :root {
-            --dark: #000087;      /* Dark Blue */
-            --sky: #2CAAFF;       /* Sky Blue */
-            --beige: #E4E4DB;     /* Light Gray Beige */
+            --dark-blue: #1a2b4c;
+            --sky-blue: #2CA8FF;
+            --orange: #f26b38;
+            --green: #4caf50;
+            --purple: #8a2be2;
+            --bg-glass: rgba(255, 255, 255, 0.75);
+            --inner-bg: #f8f9fa;
             --white: #ffffff;
-            --purple: #8a2be2;    /* Pro Mode Accent */
+            --border-color: #cbd5e1;
         }
 
         body { 
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            margin: 0; padding: 20px; 
-            color: var(--dark);
+            margin: 0; padding: 20px; color: var(--dark-blue);
             min-height: 100vh;
             background: url('background.jpg') no-repeat center center fixed; 
             background-size: cover;
+            background-color: #1a2b4c; /* Fallback */
+            display: flex; justify-content: center; align-items: flex-start;
         }
 
         /* OVERLAYS */
         #auth-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 135, 0.9); z-index: 1000;
+            background: rgba(26, 43, 76, 0.9); z-index: 1000;
             display: flex; flex-direction: column; align-items: center; justify-content: center; color: white;
         }
         .auth-box {
-            background: var(--white); padding: 40px; border-radius: 15px; text-align: center; color: var(--dark);
+            background: var(--white); padding: 40px; border-radius: 15px; text-align: center; color: var(--dark-blue);
             box-shadow: 0 10px 30px rgba(0,0,0,0.5); max-width: 400px; width: 90%;
         }
         .btn-auth {
-            background: var(--sky); color: white; border: none; padding: 12px 25px; border-radius: 8px;
+            background: var(--dark-blue); color: white; border: none; padding: 12px 25px; border-radius: 8px;
             font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 20px; width: 100%;
         }
         .btn-auth:hover { opacity: 0.9; }
 
         /* THE GLASS CONTAINER */
         .container { 
-            max-width: 650px; margin: 20px auto; 
-            background: rgba(255, 255, 255, 0.96); 
-            padding: 30px; border-radius: 15px; 
-            box-shadow: 0 10px 30px rgba(0, 0, 50, 0.4); 
-            border-top: 8px solid var(--sky); 
-            backdrop-filter: blur(5px); 
-            position: relative;
-            display: none; /* Hidden until authenticated */
+            width: 100%; max-width: 800px; margin: 10px auto; 
+            background: var(--bg-glass); padding: 30px; border-radius: 20px; 
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); 
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.5); display: none;
         }
 
         .header-section { text-align: center; margin-bottom: 20px; position: relative; }
-        .logo-img { max-width: 150px; height: auto; margin-bottom: 10px;}
-        h2 { margin: 0 0 15px 0; color: var(--dark); letter-spacing: 1px; font-size: 1.8rem; }
-        .user-badge { position: absolute; right: 0; top: -15px; font-size: 0.8rem; background: var(--dark); color: white; padding: 4px 10px; border-radius: 20px; }
+        .logo-img { max-width: 200px; height: auto; margin-bottom: 10px;}
+        h2 { margin: 0; font-size: 1.8rem; letter-spacing: 0.5px; }
+        .user-badge { position: absolute; right: 0; top: 0; font-size: 0.8rem; background: var(--dark-blue); color: white; padding: 4px 10px; border-radius: 20px; }
 
         /* TABS */
         .tabs-container {
-            display: flex; background: var(--beige); border-radius: 30px;
-            margin: 10px auto 25px auto; max-width: 100%; padding: 4px;
+            display: flex; background: rgba(255, 255, 255, 0.8); border-radius: 30px;
+            margin: 20px auto; max-width: 600px; border: 1px solid var(--border-color);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
         .tab-btn {
-            flex: 1; padding: 10px; border: none; background: transparent; color: #555; 
-            font-weight: bold; font-size: 0.95rem; cursor: pointer; border-radius: 30px; transition: all 0.3s;
+            flex: 1; padding: 12px; border: none; background: transparent; color: #555; 
+            font-weight: bold; font-size: 1rem; cursor: pointer; transition: all 0.3s;
         }
-        .tab-btn.active { background: var(--dark); color: var(--white); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .tab-btn.active { background: var(--dark-blue); color: var(--white); border-radius: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
         .tab-pro.active { background: var(--purple); }
 
-        /* NAV CONTROLS */
-        .nav-controls { 
-            display: flex; justify-content: space-between; 
-            margin-bottom: 20px; 
-            border-bottom: 1px solid #eee; padding-bottom: 15px;
-            gap: 10px;
+        /* STANDARD UI ELEMENTS */
+        .standard-ui { display: block; }
+        .top-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; max-width: 600px; margin: 0 auto 25px auto; }
+        .btn-nav-top { padding: 10px 20px; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; color: white; cursor: pointer; transition: opacity 0.2s; flex: 1; }
+        .btn-prev, .btn-next { background-color: var(--dark-blue); max-width: 120px; }
+        .btn-print { background-color: var(--green); flex: 2; }
+
+        .inner-card { background: var(--inner-bg); border: 2px solid var(--dark-blue); border-radius: 12px; padding: 25px; margin-bottom: 25px; }
+        .question-text { font-size: 1.4rem; font-weight: 800; margin: 0 0 20px 0; }
+        .input-label { font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.85rem; text-transform: uppercase; }
+        textarea, .transcript-box, .ai-box, select { 
+            width: 100%; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px; 
+            font-size: 1rem; box-sizing: border-box; font-family: inherit; background-color: var(--white);
         }
-        .btn-nav { 
-            background-color: var(--dark); color: white; border: none; 
-            font-weight: bold; padding: 8px 15px; font-size: 0.95rem;
-            border-radius: 6px; cursor: pointer; transition: all 0.2s;
-            flex: 1; max-width: 150px;
-        } 
-        .btn-nav:hover { opacity: 0.9; transform: translateY(-1px); }
-        .btn-print { background-color: #27ae60; }
-
-        /* INPUT AREAS & BOXES */
-        .question-box { background: var(--beige); padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid var(--dark); }
-        .question-text { font-size: 1.25em; font-weight: bold; color: var(--dark); margin: 0; }
-
-        label { font-weight: bold; display: block; margin-bottom: 5px; color: var(--dark); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
-        textarea { 
-            width: 100%; height: 120px; padding: 15px; border: 2px solid #ccc; border-radius: 8px; 
-            font-size: 16px; box-sizing: border-box; resize: vertical; font-family: inherit; 
-            margin-bottom: 10px; background-color: #fafafa;
-        }
-        textarea:focus { border-color: var(--sky); outline: none; background-color: white; }
-
-        /* MAIN CONTROLS */
-        .controls { display: flex; gap: 10px; margin: 15px 0 25px 0; flex-wrap: wrap; }
-        button { 
-            flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 15px; 
-            cursor: pointer; font-weight: bold; color: white; transition: all 0.2s; 
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        button:active { transform: scale(0.98); }
-
-        .btn-save { background-color: var(--dark); } 
-        .btn-speak { background-color: var(--sky); }
+        textarea { height: 110px; resize: vertical; margin-bottom: 20px; }
+        textarea:focus, select:focus { border-color: var(--sky-blue); outline: none; }
         
-        .btn-record { background-color: white; color: var(--dark); border: 2px solid var(--dark); padding: 10px; }
-        .btn-record:hover { background-color: var(--beige); }
-        .btn-record.recording { background-color: var(--dark); color: white; border-color: var(--dark); animation: pulse-blue 1.5s infinite; }
-        
-        /* TRANSCRIPT & ANALYSIS */
-        .transcript-container { background-color: var(--beige); border: 2px solid var(--sky); border-radius: 8px; padding: 15px; margin-top: 10px; position: relative; }
-        .transcript-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.85em; color: var(--dark); font-weight: bold; text-transform: uppercase; }
-        .transcript-text { font-style: italic; color: #444; min-height: 40px; font-size: 1.05em; line-height: 1.5; }
-        
-        .btn-compare { background-color: white; border: 1px solid var(--sky); color: var(--dark); padding: 4px 10px; font-size: 0.8rem; flex: 0 0 auto; width: auto; border-radius: 4px; }
-        .btn-compare:hover { background-color: var(--sky); color: white; }
-        #analysis-result { margin-top: 15px; padding: 15px; background-color: #fff; border-left: 5px solid var(--sky); font-size: 0.95em; display: none; color: #333; }
-
-        /* PAGINATION */
-        .pagination { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 30px; margin-bottom: 20px;}
-        .page-btn {
-            width: 40px; height: 40px; flex: none; border-radius: 50%;
-            border: 2px solid var(--sky); background-color: var(--white);
-            color: var(--dark); font-weight: bold; font-size: 14px;
-            cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; padding: 0;
+        .action-controls { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+        .btn-action { 
+            flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; color: white; cursor: pointer;
         }
-        .page-btn:hover { background-color: var(--beige); }
-        .page-btn.active { background-color: var(--dark); color: var(--white); border-color: var(--dark); transform: scale(1.1); }
+        .btn-save { background-color: var(--dark-blue); }
+        .btn-listen { background-color: var(--sky-blue); }
+        .btn-record { background-color: var(--orange); }
+        .btn-record.recording { animation: pulse-orange 1.5s infinite; }
 
-        /* FOOTER PROMPT */
-        .prompt-footer { margin-top: 30px; padding: 15px; background-color: #f8f9fa; border-top: 2px dashed #ccc; border-radius: 0 0 15px 15px; font-size: 0.9em; color: #555; }
-        .prompt-title { font-weight: bold; color: var(--dark); margin-bottom: 5px; display: flex; align-items: center; gap: 5px; }
-        .prompt-text { background: #fff; border: 1px solid #ddd; padding: 10px; border-radius: 6px; font-family: monospace; color: #333; margin-bottom: 10px; white-space: pre-wrap; }
-        .btn-copy { background-color: #666; width: auto; font-size: 0.8em; padding: 5px 15px; margin-left: auto; display: block; flex: 0 0 auto; }
-        .btn-copy:hover { background-color: #444; }
+        .transcript-row { display: flex; gap: 15px; align-items: stretch; }
+        .transcript-box { flex: 1; min-height: 50px; display: flex; align-items: center; color: #555; font-style: italic; margin: 0; }
+        .btn-analyze { background-color: var(--dark-blue); color: white; border: none; border-radius: 8px; font-weight: bold; padding: 0 20px; cursor: pointer; }
+        #analysis-result { margin-top: 15px; padding: 15px; background-color: var(--white); border-left: 4px solid var(--sky-blue); border-radius: 4px; display: none; }
 
-        #toast { visibility: hidden; min-width: 250px; background-color: var(--dark); color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; z-index: 99; left: 50%; transform: translateX(-50%); bottom: 30px; font-size: 17px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border: 1px solid var(--sky); }
+        .pagination { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 25px; padding: 0 20px;}
+        .page-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--dark-blue); background: transparent; color: var(--dark-blue); font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;}
+        .page-btn.active { background: var(--dark-blue); color: var(--white); transform: scale(1.1); }
+
+        /* FOOTER PROMPT (Standard UI) */
+        .prompt-footer { margin-top: 20px; padding: 20px; background-color: var(--inner-bg); border-radius: 12px; font-size: 0.9em; color: #555; }
+        .prompt-title { font-weight: bold; color: var(--dark-blue); margin-bottom: 5px; font-size: 1.1rem; }
+        .prompt-text { background: #fff; border: 1px solid #ddd; padding: 15px; border-radius: 6px; font-family: monospace; color: #333; margin-bottom: 15px; white-space: pre-wrap; }
+        .btn-copy { background-color: var(--dark-blue); color: white; border: none; border-radius: 8px; font-weight: bold; padding: 10px 20px; cursor: pointer; float: right;}
+
+        /* --- PRO UI ELEMENTS (GUIDED WORKFLOW) --- */
+        .pro-ui { display: none; }
+        .pro-card { background: #f4f0ff; border: 2px solid var(--purple); border-radius: 12px; padding: 25px; margin-bottom: 25px; }
+        .pro-step { background: white; border: 1px solid rgba(138, 43, 226, 0.2); border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);}
+        .pro-step h3 { margin-top: 0; color: var(--purple); font-size: 1.1rem; margin-bottom: 15px; }
+        .btn-pro-main { background: var(--purple); color: white; border: none; padding: 15px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1.1rem; display: flex; justify-content: center; align-items: center; gap: 10px; transition: opacity 0.2s;}
+        .btn-pro-main:hover { opacity: 0.9; }
+        .btn-pro-save { background-color: var(--dark-blue); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; transition: opacity 0.2s;}
+        
+        #toast { visibility: hidden; min-width: 250px; background-color: var(--dark-blue); color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; left: 50%; transform: translateX(-50%); bottom: 30px; font-size: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 9999;}
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
         
-        @keyframes pulse-blue { 0% { box-shadow: 0 0 0 0 rgba(44, 170, 255, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(44, 170, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(44, 170, 255, 0); } }
+        @keyframes pulse-orange { 0% { box-shadow: 0 0 0 0 rgba(242, 107, 56, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(242, 107, 56, 0); } 100% { box-shadow: 0 0 0 0 rgba(242, 107, 56, 0); } }
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
-        .loading-spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,.3); border-radius: 50%; border-top-color: #fff; animation: spin 1s ease-in-out infinite; margin-left: 10px; vertical-align: middle;}
-        @keyframes spin { to { transform: rotate(360deg); } }
 
         /* PRINT STYLES */
         #print-area { display: none; }
@@ -163,6 +143,8 @@
             .print-question { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; color: black; }
             .print-answer { font-size: 1rem; white-space: pre-wrap; line-height: 1.5; padding: 10px; background: #f9f9f9; border-left: 4px solid #333; }
         }
+        .loading-spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,.3); border-radius: 50%; border-top-color: #fff; animation: spin 1s ease-in-out infinite; margin-left: 10px; vertical-align: middle;}
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -170,8 +152,8 @@
 <!-- AUTHENTICATION OVERLAY -->
 <div id="auth-overlay">
     <div class="auth-box">
-        <img src="mylogo.png" alt="Logo" style="max-width: 150px; margin-bottom: 20px;" onerror="this.style.display='none'">
-        <h2>Interview Coach</h2>
+        <img src="https://placehold.co/150x50/1a2b4c/white?text=LOGO" alt="logo" style="max-width: 150px; margin-bottom: 20px; border-radius: 8px;">
+        <h2 style="color: var(--dark-blue);">Interview Coach</h2>
         <p>Sign in to sync your answers securely to the cloud.</p>
         <button class="btn-auth" onclick="startAuthFlow()" id="auth-btn">Authenticate with Google 🔒</button>
     </div>
@@ -179,7 +161,7 @@
 
 <div class="container" id="main-app">
     <div class="header-section">
-        <img src="mylogo.png" alt="App Logo" class="logo-img" onerror="this.style.display='none'">
+        <img src="https://placehold.co/150x50/1a2b4c/white?text=LOGO" alt="logo" class="logo-img">
         <h2>Interview Preparation Coach</h2>
         <div class="user-badge" id="user-badge">Syncing...</div>
     </div>
@@ -191,34 +173,30 @@
         <button id="tab-pro" class="tab-btn tab-pro" onclick="switchCategory('pro')">Pro (AI) ✨</button>
     </div>
     
-    <!-- ================= STANDARD & BASIC UI ================= -->
-    <div id="standard-ui">
-        <div class="nav-controls">
-            <button class="btn-nav" onclick="changeQuestion(-1)">⬅ Prev</button>
-            <button class="btn-nav btn-print" onclick="preparePrint()">🖨️ Print Answers</button>
-            <button class="btn-nav" onclick="changeQuestion(1)">Next ➡</button>
+    <!-- ================= STANDARD UI ================= -->
+    <div id="standard-ui" class="standard-ui">
+        <div class="top-nav">
+            <button class="btn-nav-top btn-prev" onclick="changeQuestion(-1)">← Prev</button>
+            <button class="btn-nav-top btn-print" onclick="preparePrint()">🖨️ Print Answers</button>
+            <button class="btn-nav-top btn-next" onclick="changeQuestion(1)">Next →</button>
         </div>
 
-        <div class="question-box">
+        <div class="inner-card">
             <p class="question-text" id="question-text">Loading...</p>
-        </div>
 
-        <label for="answer-input">📝 Plan your answer here:</label>
-        <textarea id="answer-input" autocomplete="off" placeholder=""></textarea>
+            <span class="input-label">PLAN YOUR ANSWER HERE:</span>
+            <textarea id="answer-input" autocomplete="off" placeholder=""></textarea>
 
-        <div class="controls">
-            <button class="btn-save" onclick="saveData()">💾 Save</button>
-            <button class="btn-speak" onclick="speakAnswer()">🔊 Listen</button>
-            <button class="btn-record" id="mic-btn-standard" onclick="toggleRecording('standard')">🎤 Record</button>
-        </div>
-
-        <div id="transcript-box" class="transcript-container">
-            <div class="transcript-header">
-                <span>🗣️ What you actually said:</span>
-                <button class="btn-compare" onclick="analyzeSpeech()">🔍 Analyze</button>
+            <div class="action-controls">
+                <button class="btn-action btn-save" onclick="saveData()">💾 Save</button>
+                <button class="btn-action btn-listen" onclick="speakAnswer()">🔊 Listen</button>
+                <button class="btn-action btn-record" id="mic-btn-standard" onclick="toggleRecording('standard')">🎤 Record</button>
             </div>
-            <div id="transcript-content" class="transcript-text">
-                (Your recording will appear here...)
+
+            <span class="input-label">WHAT YOU ACTUALLY SAID:</span>
+            <div class="transcript-row">
+                <div id="transcript-content" class="transcript-box">(Your recording will appear here...)</div>
+                <button class="btn-analyze" onclick="analyzeSpeech()">🔍 Analyze</button>
             </div>
             <div id="analysis-result"></div>
         </div>
@@ -226,32 +204,51 @@
         <div id="pagination" class="pagination"></div>
 
         <div class="prompt-footer">
-            <div class="prompt-title">🤖 Need corrections? Use external AI</div>
-            <p style="margin: 5px 0;">Copy this prompt and paste it into ChatGPT, Gemini, or Claude along with your answer:</p>
+            <div class="prompt-title">Need corrections? Use external AI</div>
+            <p style="margin: 5px 0 15px 0; font-size: 0.9em;">Copy this prompt and paste it into ChatGPT, Gemini, or Claude along with your answer.</p>
             <div class="prompt-text" id="ai-prompt-text">Act as an expert English Interview Coach. Correct the grammar and vocabulary of my answer to be more professional. Keep it natural. My answer is: [PASTE YOUR ANSWER HERE]</div>
-            <button class="btn-copy" onclick="copyPrompt()">📋 Copy Prompt</button>
+            <button class="btn-copy" onclick="copyStandardPrompt()">📋 Copy Prompt</button>
+            <div style="clear:both;"></div>
         </div>
     </div>
 
-    <!-- ================= PRO UI (EMBEDDED AI SIMULATOR) ================= -->
-    <div id="pro-ui" style="display: none;">
-        <button class="btn-nav" id="btn-generate-q" onclick="generateProQuestion()" style="width: 100%; max-width: 100%; margin-bottom: 20px; background-color: var(--purple); font-size: 1.1rem; padding: 12px;">Generate New Interview Question 🤖</button>
-        
-        <div id="pro-question-area" style="display: none;">
-            <div class="question-box" style="border-left-color: var(--purple);">
-                <label style="color: var(--purple);">AI INTERVIEWER:</label>
-                <p class="question-text" id="pro-ai-question" style="font-size: 1.15em; margin-top: 5px;">Thinking...</p>
+    <!-- ================= GUIDED PRO UI (NO API KEYS NEEDED) ================= -->
+    <div id="pro-ui" class="pro-ui">
+        <div class="pro-card">
+            <h2 style="color: var(--purple); margin-bottom: 5px; font-size: 1.5rem;">✨ Guided AI Interview</h2>
+            <p style="color: #666; margin-bottom: 25px; line-height: 1.5;">Practice a live, voice-to-voice interview directly with Google Gemini. No API keys required.</p>
+            
+            <!-- Step 1 -->
+            <div class="pro-step">
+                <h3>1. Choose your Interview Role</h3>
+                <select id="ai-role" onchange="updateProPrompt()" style="margin-bottom: 0;">
+                    <option value="Software Engineer">Software Engineer</option>
+                    <option value="Frontend Web Developer">Frontend Web Developer</option>
+                    <option value="Backend Developer">Backend Developer</option>
+                    <option value="Data Analyst">Data Analyst</option>
+                    <option value="Project Manager">Project Manager</option>
+                    <option value="General Professional">General Professional (Behavioral)</option>
+                </select>
             </div>
-            
-            <label>📝 YOUR RESPONSE (Record or Type):</label>
-            <textarea id="pro-answer-input" placeholder="Tap Record to speak, or type your answer here..."></textarea>
-            
-            <div class="controls">
-                <button class="btn-record" id="mic-btn-pro" onclick="toggleRecording('pro')" style="border-color: var(--purple); color: var(--purple);">🎤 Record Answer</button>
-                <button class="btn-save" onclick="submitProAnswer()" id="btn-submit-pro" style="background-color: var(--purple);">Submit for Feedback 🧠</button>
+
+            <!-- Step 2 -->
+            <div class="pro-step">
+                <h3>2. Generate Your Prompt</h3>
+                <textarea id="pro-prompt-box" readonly style="background-color: #f8f9fa; color: #444; height: 130px; margin-bottom: 15px;"></textarea>
+                <button class="btn-pro-main" onclick="copyAndOpenGemini()">
+                    📋 Copy Prompt & Open Gemini 🚀
+                </button>
             </div>
-            
-            <div id="pro-feedback-box" class="transcript-container" style="display: none; border-color: var(--purple);"></div>
+
+            <!-- Step 3 -->
+            <div class="pro-step" style="margin-bottom: 0;">
+                <h3>3. Save Your Results (Optional)</h3>
+                <p style="font-size: 0.9rem; color: #555; margin-bottom: 10px;">When you finish your practice in the Gemini tab, paste your final feedback here to save it to your portfolio.</p>
+                <textarea id="pro-feedback-save" placeholder="Paste Gemini's feedback here..."></textarea>
+                <button class="btn-pro-save" onclick="saveProFeedback()">
+                    ☁️ Save Feedback to Cloud
+                </button>
+            </div>
         </div>
     </div>
 
@@ -262,11 +259,12 @@
 
 <!-- ================= FIREBASE & LOGIC ================= -->
 <script type="module">
+    // Firebase Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // Firebase Init (Using your provided keys)
+    // Firebase Init - REPLACE THESE VALUES WITH YOUR ACTUAL CONFIG FROM FIREBASE
     const firebaseConfig = {
         apiKey: "AIzaSyBQjdvuuV_iyv4EhEcykOD5frvoboFVlUo",
         authDomain: "interview-coach-ea32c.firebaseapp.com",
@@ -283,8 +281,10 @@
     const appId = 'interview-coach-db'; 
     let currentUser = null;
 
+    // Data Cache
     let dbAnswers = { basic: {}, standard: {} };
 
+    // Questions Data
     const questionSets = {
         basic: [
             { text: "1. What's your full name?", hint: "Suggestion: State your full name clearly." },
@@ -334,7 +334,14 @@
     let currentCategory = 'basic'; 
     let currentIndex = 0;
     
-    // Auth Flow
+    // UI Elements
+    const qText = document.getElementById("question-text");
+    const inputArea = document.getElementById("answer-input");
+    const transcriptContent = document.getElementById("transcript-content");
+    const analysisBox = document.getElementById("analysis-result");
+    const paginationContainer = document.getElementById("pagination");
+
+    // --- AUTHENTICATION FLOW ---
     window.startAuthFlow = async () => {
         const btn = document.getElementById('auth-btn');
         btn.innerHTML = "Authenticating... <span class='loading-spinner'></span>";
@@ -342,9 +349,10 @@
         try {
             await signInWithPopup(auth, provider);
         } catch (e) {
+            console.error("Auth Error", e);
             btn.innerHTML = "Authenticate with Google 🔒";
             btn.disabled = false;
-            alert("Login Failed. Make sure your GitHub link is in Firebase Authorized Domains.");
+            alert("Login Failed. Make sure you added your GitHub link to Firebase Authorized Domains!");
         }
     };
 
@@ -356,43 +364,48 @@
             document.getElementById('user-badge').innerText = "Logged In: " + user.uid.substring(0,6) + "...";
             await loadAllFirebaseData();
             initUI();
+            updateProPrompt(); // Initialize pro prompt on load
         }
     });
 
-    // Firebase Data
+    // --- FIREBASE DATA SYNC ---
     async function loadAllFirebaseData() {
         if (!currentUser) return;
         try {
             const basicRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'answers', 'basic');
             const stdRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'answers', 'standard');
+            
             const [basicSnap, stdSnap] = await Promise.all([getDoc(basicRef), getDoc(stdRef)]);
             
             if(basicSnap.exists()) dbAnswers.basic = basicSnap.data();
             if(stdSnap.exists()) dbAnswers.standard = stdSnap.data();
-        } catch(e) {}
+        } catch(e) {
+            console.error("Data Load Error", e);
+        }
     }
 
     let saveTimeout;
-    function saveToFirebase(category, index, value) {
+    window.saveData = () => {
+        saveToFirebase(currentCategory, currentIndex, inputArea.value);
+    }
+    
+    async function saveToFirebase(category, index, value) {
         if (!currentUser) return;
         dbAnswers[category][index] = value;
+        
         clearTimeout(saveTimeout);
         saveTimeout = setTimeout(async () => {
             try {
                 const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'answers', category);
                 await setDoc(docRef, dbAnswers[category], { merge: true });
                 showToast("✅ Auto-saved to Cloud");
-            } catch(e) {}
+            } catch(e) {
+                console.error("Save Error", e);
+            }
         }, 1500);
     }
 
-    // UI Logic
-    const qText = document.getElementById("question-text");
-    const inputArea = document.getElementById("answer-input");
-    const transcriptContent = document.getElementById("transcript-content");
-    const analysisBox = document.getElementById("analysis-result");
-    const paginationContainer = document.getElementById("pagination");
-
+    // --- UI NAVIGATION LOGIC ---
     function initUI() {
         renderPagination();
         loadQuestion(0);
@@ -406,7 +419,7 @@
         if (category === 'pro') {
             document.getElementById('standard-ui').style.display = 'none';
             document.getElementById('pro-ui').style.display = 'block';
-            if(isRecording) window.toggleRecording('pro');
+            stopRecording(); // ensure mic is off
         } else {
             document.getElementById('pro-ui').style.display = 'none';
             document.getElementById('standard-ui').style.display = 'block';
@@ -445,11 +458,11 @@
 
         transcriptContent.innerText = "(Your recording will appear here...)";
         analysisBox.style.display = "none";
+
         inputArea.value = dbAnswers[currentCategory][currentIndex] || "";
     }
 
     window.changeQuestion = (dir) => loadQuestion(currentIndex + dir);
-    window.saveData = () => saveToFirebase(currentCategory, currentIndex, inputArea.value);
 
     window.speakAnswer = () => {
         const text = inputArea.value;
@@ -462,12 +475,12 @@
 
     function showToast(message) {
         const x = document.getElementById("toast");
-        x.innerText = message || "✅ Action Successful!";
+        x.innerText = message;
         x.className = "show";
         setTimeout(() => x.className = x.className.replace("show", ""), 3000);
     }
 
-    window.copyPrompt = () => {
+    window.copyStandardPrompt = () => {
         const promptText = document.getElementById("ai-prompt-text").innerText;
         if (!navigator.clipboard) { document.execCommand('copy'); showToast("📋 Prompt Copied!"); return; }
         navigator.clipboard.writeText(promptText).then(() => showToast("📋 Prompt Copied!"));
@@ -480,6 +493,7 @@
         const categoryTitle = currentCategory === 'standard' ? 'Standard Questions' : 'Basic Questions';
         
         let printHTML = `<h1>My Interview Preparation Answers - ${categoryTitle}</h1>`;
+        
         currentData.forEach((q, index) => {
             const savedAnswer = dbAnswers[currentCategory][index];
             printHTML += `
@@ -489,102 +503,60 @@
                 </div>
             `;
         });
+        
         printArea.innerHTML = printHTML;
         window.print(); 
     };
 
-    // --- GEMINI AI INTEGRATION (PRO MODE) ---
-    // Using your exact AQ key and working URL for embedded practice
-    const apiKey = "AQ.Ab8RN6Jyh2u4WjVhQk79d9Dtx_0bLyeMrSQz1ryOUtRcuxB7Sw"; 
-    let currentProQuestion = "";
+    // --- GUIDED PRO UI LOGIC (NO API CALLS) ---
+    
+    window.updateProPrompt = () => {
+        const role = document.getElementById('ai-role').value;
+        const promptBox = document.getElementById('pro-prompt-box');
+        promptBox.value = `Act as an expert ${role} interviewer. Ask me ONE realistic interview question. Wait for my answer. After I answer, grade it on a scale of 1-10 based on clarity, professional English, and relevance. Provide 2 specific ways to improve. Then, ask the next question.`;
+    };
 
-    async function callGemini(promptText) {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: promptText }] }]
-            })
+    window.copyAndOpenGemini = () => {
+        const prompt = document.getElementById('pro-prompt-box').value;
+        if (!navigator.clipboard) {
+            document.execCommand('copy'); 
+            triggerGeminiOpen();
+            return;
+        }
+        navigator.clipboard.writeText(prompt).then(() => {
+            triggerGeminiOpen();
         });
-        const result = await response.json();
-        if(result.error) throw new Error(result.error.message);
-        return result.candidates[0].content.parts[0].text;
+    };
+    
+    function triggerGeminiOpen() {
+        showToast("📋 Prompt copied! Opening Gemini...");
+        setTimeout(() => {
+            window.open('https://gemini.google.com/', '_blank');
+        }, 1500);
     }
 
-    window.generateProQuestion = async () => {
-        const btn = document.getElementById('btn-generate-q');
-        const qBox = document.getElementById('pro-ai-question');
-        const area = document.getElementById('pro-question-area');
-        const feedback = document.getElementById('pro-feedback-box');
-        const answerInput = document.getElementById('pro-answer-input');
-
-        btn.disabled = true;
-        btn.innerHTML = "Generating... <span class='loading-spinner'></span>";
-        area.style.display = 'block';
-        feedback.style.display = 'none';
-        qBox.innerText = "Thinking...";
-        answerInput.value = "";
-
-        const prompt = `You are a Senior Software Developer conducting a job interview. 
-        Ask ONE interview question. It can be a technical web development question or a behavioral question. 
-        Only output the question, nothing else.`;
-
-        try {
-            const text = await callGemini(prompt);
-            currentProQuestion = text;
-            qBox.innerText = text;
-            
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'en-US'; 
-            window.speechSynthesis.speak(utterance);
-        } catch (e) {
-            qBox.innerText = "Error connecting to AI Interviewer. Please try again.";
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = "Generate New Interview Question 🤖";
-        }
-    };
-
-    window.submitProAnswer = async () => {
-        const answer = document.getElementById('pro-answer-input').value;
-        const btn = document.getElementById('btn-submit-pro');
-        const feedbackBox = document.getElementById('pro-feedback-box');
-
-        if(!answer.trim()) return showToast("Please record or type an answer first!");
-
-        btn.disabled = true;
-        btn.innerHTML = "Analyzing... <span class='loading-spinner'></span>";
-        feedbackBox.style.display = 'block';
-        feedbackBox.innerHTML = "<i>Analyzing your grammar and technical logic...</i>";
-
-        const prompt = `You are a Senior Software Developer interviewer. 
-        You asked the candidate: "${currentProQuestion}"
-        The candidate answered: "${answer}"
+    window.saveProFeedback = async () => {
+        const feedbackBox = document.getElementById('pro-feedback-save');
+        const feedback = feedbackBox.value.trim();
         
-        Provide professional feedback. Format your response clearly with these headings:
-        1. Feedback on Content & Logic
-        2. Grammar & Language Improvements
-        3. Pro Tip for Next Time
-        Keep it concise and encouraging.`;
+        if (!feedback) return showToast("Please paste Gemini's feedback first!");
+        if (!currentUser) return showToast("Please log in to save feedback.");
 
         try {
-            const feedbackText = await callGemini(prompt);
-            const formattedHTML = feedbackText.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            feedbackBox.innerHTML = `<h4 style="margin-top:0; color:var(--purple);">AI Interviewer Feedback:</h4>${formattedHTML}`;
-        } catch (e) {
-            feedbackBox.innerHTML = "<span style='color:red;'>Error generating feedback. Please try again.</span>";
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = "Submit for Feedback 🧠";
+            const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'answers', 'pro_feedback');
+            // Save it under a timestamp to keep a history of feedback
+            await setDoc(docRef, { [Date.now()]: feedback }, { merge: true });
+            showToast("☁️ Feedback Saved to Cloud!");
+            feedbackBox.value = ''; // clear it out after saving
+        } catch(e) {
+            console.error("Save Error", e);
+            showToast("❌ Failed to save feedback.");
         }
     };
 
-    // --- SPEECH RECOGNITION (SHARED FOR BOTH MODES) ---
+    // --- SPEECH RECOGNITION (STANDARD TAB) ---
     let recognition; 
     let isRecording = false; 
-    let currentRecordingMode = 'standard'; 
 
     window.analyzeSpeech = () => {
         const typed = inputArea.value.toLowerCase().replace(/[^\w\s]/g,"").split(/\s+/);
@@ -598,7 +570,7 @@
         const validWords = typed.filter(w=>w.length>2).length;
         const score = validWords > 0 ? Math.round((match/validWords)*100) : 0;
         
-        analysisBox.innerHTML = `<strong>Score: <span style="color:var(--sky)">${score}%</span></strong><br>` + 
+        analysisBox.innerHTML = `<strong>Score: <span style="color:var(--sky-blue)">${score}%</span></strong><br>` + 
         (missing.length ? `<p style="font-size:0.9em;color:#555">Missed words:</p><div style="color:red;font-style:italic">${missing.join(", ")}</div>` : `<p style="color:green">Perfect match!</p>`);
         analysisBox.style.display = "block";
     };
@@ -613,20 +585,14 @@
             for (let i = e.resultIndex; i < e.results.length; ++i) 
                 e.results[i].isFinal ? final += e.results[i][0].transcript + ' ' : interim += e.results[i][0].transcript;
             
-            if (currentRecordingMode === 'standard') {
-                if (final || interim) {
-                    if(transcriptContent.innerText.includes("recording will appear")) transcriptContent.innerText = "";
-                    transcriptContent.innerHTML = `<strong>${final}</strong><span style="color:var(--sky)">${interim}</span>`;
-                }
-            } else if (currentRecordingMode === 'pro') {
-                const input = document.getElementById('pro-answer-input');
-                if (final) input.value += final + ' ';
+            if (final || interim) {
+                if(transcriptContent.innerText.includes("recording will appear")) transcriptContent.innerText = "";
+                transcriptContent.innerHTML = `<strong>${final}</strong><span style="color:var(--sky-blue)">${interim}</span>`;
             }
         };
     }
 
-    window.toggleRecording = (mode) => { 
-        currentRecordingMode = mode;
+    window.toggleRecording = () => { 
         isRecording ? stopRecording() : startRecording(); 
     };
 
@@ -635,14 +601,9 @@
         recognition.start(); 
         isRecording = true; 
         
-        if(currentRecordingMode === 'standard') {
-            const btn = document.getElementById("mic-btn-standard");
-            btn.innerHTML = "🛑 Stop"; btn.classList.add("recording"); 
-            analysisBox.style.display="none"; transcriptContent.innerText=""; 
-        } else {
-            const btn = document.getElementById("mic-btn-pro");
-            btn.innerHTML = "🛑 Stop Recording"; btn.classList.add("recording"); 
-        }
+        const btn = document.getElementById("mic-btn-standard");
+        btn.innerHTML = "🛑 Stop"; btn.classList.add("recording"); 
+        analysisBox.style.display="none"; transcriptContent.innerText=""; 
     }
 
     function stopRecording() { 
@@ -650,11 +611,11 @@
         recognition.stop(); 
         isRecording = false; 
         
-        document.getElementById("mic-btn-standard").innerHTML = "🎤 Record"; 
-        document.getElementById("mic-btn-standard").classList.remove("recording");
-        
-        document.getElementById("mic-btn-pro").innerHTML = "🎤 Record Answer"; 
-        document.getElementById("mic-btn-pro").classList.remove("recording");
+        const btn = document.getElementById("mic-btn-standard");
+        if(btn) {
+            btn.innerHTML = "🎤 Record"; 
+            btn.classList.remove("recording");
+        }
     }
 
 </script>
